@@ -2,8 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Motogymkhana Academy</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff4500">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MotoGym">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="description" content="Professional Motogymkhana training — animated diagrams, course builder, timer and practice log">
+
+<!-- Open Graph for sharing -->
+<meta property="og:title" content="Motogymkhana Academy">
+<meta property="og:description" content="Learn every JAGE figure, build courses, track your times.">
+<meta property="og:type" content="website">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap');
 :root{
@@ -235,9 +250,70 @@ input[type=range]{flex:1;accent-color:var(--orange);height:3px;}
 
 /* Export */
 .exp-btn{width:100%;font-family:'Barlow Condensed';font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px;border-radius:3px;cursor:pointer;border:none;transition:all .15s;margin-bottom:5px;}
+
+/* ══ PWA INSTALL BANNER ══ */
+#installBanner{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surf);border-top:2px solid var(--orange);padding:12px 16px;z-index:9999;align-items:center;gap:12px;box-shadow:0 -4px 20px rgba(0,0,0,.5);}
+#installBanner.show{display:flex;}
+.install-icon{width:40px;height:40px;border-radius:8px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.install-text{flex:1;}
+.install-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;}
+.install-sub{font-size:11px;color:var(--dim);}
+.install-btns{display:flex;gap:8px;flex-shrink:0;}
+.ibtn{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;padding:7px 14px;border-radius:3px;cursor:pointer;border:none;text-transform:uppercase;}
+.ibtn-p{background:var(--orange);color:#000;}
+.ibtn-s{background:transparent;color:var(--dim);border:1px solid var(--b2);}
+#offlineBadge{display:none;position:fixed;top:48px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 12px;border-radius:0 0 4px 4px;z-index:9998;}
+
+/* ══ MOBILE ══ */
+@media(max-width:768px){
+  header{height:44px;padding:0 8px;gap:5px;}
+  .logo{font-size:15px;letter-spacing:2px;}
+  .tab{padding:3px 7px;font-size:8px;letter-spacing:1px;}
+  .tabs{margin-left:3px;gap:1px;}
+  .hb{padding:4px 7px;font-size:9px;}
+  .learn-layout{grid-template-columns:1fr;}
+  .learn-side{display:none;}
+  .fig-tabs{padding:4px 8px;gap:2px;}
+  .ftab{padding:3px 7px;font-size:8px;}
+  .learn-toolbar{padding:5px 8px;gap:4px;flex-wrap:nowrap;overflow-x:auto;}
+  .ltitle{font-size:13px;white-space:nowrap;}
+  .build-layout{grid-template-columns:1fr;}
+  .build-left,.build-right{display:none;}
+  .build-toolbar{padding:5px 8px;gap:3px;overflow-x:auto;flex-wrap:nowrap;}
+  .bmode-btn{padding:4px 6px;font-size:8px;}
+  .bsep{display:none;}
+  #mobileBuildBar{display:flex!important;}
+  body{padding-bottom:56px;}
+}
+#mobileBuildBar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surf);border-top:1px solid var(--b1);padding:4px;z-index:100;justify-content:space-around;align-items:center;}
+.mbb{display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 8px;border-radius:4px;cursor:pointer;border:none;background:transparent;color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:all .15s;}
+.mbb.on,.mbb:hover{background:rgba(255,69,0,.15);color:var(--orange);}
+.mbb-ic{font-size:17px;}
 </style>
 </head>
 <body>
+<!-- PWA Install Banner -->
+<div id="installBanner">
+  <div class="install-icon">🏍</div>
+  <div class="install-text">
+    <div class="install-title">Install Motogymkhana Academy</div>
+    <div class="install-sub">Add to home screen — works offline in any car park</div>
+  </div>
+  <div class="install-btns">
+    <button class="ibtn ibtn-p" onclick="pwaInstall()">INSTALL</button>
+    <button class="ibtn ibtn-s" onclick="pwaDismiss()">Not now</button>
+  </div>
+</div>
+<div id="offlineBadge">📡 OFFLINE MODE</div>
+<div id="mobileBuildBar">
+  <button class="mbb on" id="mbb-cone" onclick="setBMode('cone');mbbActive('cone')"><div class="mbb-ic">🔴</div>CONES</button>
+  <button class="mbb" id="mbb-line" onclick="setBMode('line');mbbActive('line')"><div class="mbb-ic">✏️</div>LINE</button>
+  <button class="mbb" id="mbb-select" onclick="setBMode('select');mbbActive('select')"><div class="mbb-ic">↖</div>MOVE</button>
+  <button class="mbb" id="mbb-measure" onclick="setBMode('measure');mbbActive('measure')"><div class="mbb-ic">📏</div>DIST</button>
+  <button class="mbb" id="mbb-erase" onclick="setBMode('erase');mbbActive('erase')"><div class="mbb-ic">✕</div>ERASE</button>
+  <button class="mbb" onclick="bUndo()"><div class="mbb-ic">↩</div>UNDO</button>
+  <button class="mbb" onclick="bExportPNG()"><div class="mbb-ic">⬇</div>SAVE</button>
+</div>
 <header>
   <div class="logo">MOTO<b>GYM</b>KHANA</div>
   <div class="tabs">
@@ -1937,6 +2013,113 @@ function bPrintCard(){
   </body></html>`);
   w.document.close();
 }
+
+// ════════════════════════════════════════════════════════════════
+//  📱 PWA — Service Worker + Install Prompt
+// ════════════════════════════════════════════════════════════════
+let pwaPrompt = null;
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      console.log('SW registered:', reg.scope);
+      // Check for updates
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            showTimerToast('App updated! Refresh to get latest version.', 'var(--blue)');
+          }
+        });
+      });
+    }).catch(err => console.log('SW failed:', err));
+  });
+}
+
+// Capture install prompt (Android Chrome)
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  pwaPrompt = e;
+  // Show banner after 3 seconds if not dismissed before
+  const dismissed = localStorage.getItem('pwaDismissed');
+  if (!dismissed) {
+    setTimeout(() => {
+      document.getElementById('installBanner').classList.add('show');
+    }, 3000);
+  }
+});
+
+function pwaInstall() {
+  if (!pwaPrompt) {
+    // iOS instructions
+    alert('To install on iPhone:\n1. Tap the Share button (box with arrow)\n2. Tap "Add to Home Screen"\n3. Tap "Add"\n\nThe app will appear on your home screen!');
+    pwaDismiss();
+    return;
+  }
+  pwaPrompt.prompt();
+  pwaPrompt.userChoice.then(result => {
+    if (result.outcome === 'accepted') {
+      showTimerToast('🏍 App installed!', 'var(--green)');
+    }
+    pwaPrompt = null;
+    pwaDismiss();
+  });
+}
+
+function pwaDismiss() {
+  document.getElementById('installBanner').classList.remove('show');
+  localStorage.setItem('pwaDismissed', '1');
+}
+
+// iOS — show install banner manually since no beforeinstallprompt
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInStandalone = window.navigator.standalone;
+if (isIOS && !isInStandalone && !localStorage.getItem('pwaDismissed')) {
+  setTimeout(() => {
+    document.getElementById('installBanner').classList.add('show');
+  }, 4000);
+}
+
+// Offline / online detection
+window.addEventListener('offline', () => {
+  document.getElementById('offlineBadge').style.display = 'block';
+});
+window.addEventListener('online', () => {
+  document.getElementById('offlineBadge').style.display = 'none';
+});
+if (!navigator.onLine) {
+  document.getElementById('offlineBadge').style.display = 'block';
+}
+
+// Handle URL shortcuts (?tab=timer etc)
+const urlParams = new URLSearchParams(window.location.search);
+const startTab = urlParams.get('tab');
+if (startTab) setTimeout(() => switchTab(startTab), 200);
+
+// Mobile build bar active state
+function mbbActive(mode) {
+  document.querySelectorAll('.mbb[id^="mbb-"]').forEach(b => b.classList.remove('on'));
+  const el = document.getElementById('mbb-' + mode);
+  if (el) el.classList.add('on');
+}
+
+// Show/hide mobile build bar based on active pane
+const _origSetBMode = setBMode;
+window.setBMode = function(m) {
+  _origSetBMode(m);
+  mbbActive(m);
+};
+
+// Handle mobile build bar visibility
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    const isBuild = t.textContent.includes('BUILD');
+    document.getElementById('mobileBuildBar').style.display = isBuild ? 'flex' : 'none';
+    if (!isBuild) document.body.style.paddingBottom = '0';
+    else document.body.style.paddingBottom = '56px';
+  });
+});
 
 // ════════════════════════════════════════════════════════════════
 //  INIT

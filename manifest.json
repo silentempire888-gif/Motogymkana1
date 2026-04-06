@@ -1,0 +1,43 @@
+{
+  "name": "Motogymkhana Academy",
+  "short_name": "MotoGym",
+  "description": "Professional Motogymkhana training — animated diagrams, course builder, timer and practice log",
+  "start_url": "/motogymkhana/",
+  "scope": "/motogymkhana/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07080d",
+  "theme_color": "#ff4500",
+  "categories": ["sports", "education", "utilities"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Timer",
+      "short_name": "Timer",
+      "description": "Open the practice timer",
+      "url": "/motogymkhana/?tab=timer",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Course Builder",
+      "short_name": "Builder",
+      "description": "Build a course",
+      "url": "/motogymkhana/?tab=build",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
